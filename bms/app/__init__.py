@@ -17,12 +17,20 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
-    from app.models import User
+    from app.models import User, Admin
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
 
+        # Handle admin sessions
+        if str(user_id).startswith("admin-"):
+            admin_id = user_id.split("-")[1]
+            return Admin.query.get(int(admin_id))
+
+        # Handle normal users
+        return User.query.get(int(user_id))
+    
+    
     # Register blueprints (MVC: routes act as controllers)
     from app.routes.main import main_bp
     from app.routes.auth import auth_bp
