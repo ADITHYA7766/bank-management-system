@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Admin · Users{% endblock %}
+{% block content %}
+<div class="row g-3 mb-3">
+  {% for label, value in [('Users', stats.users), ('Accounts', stats.accounts), ('Transactions', stats.transactions)] %}
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted small text-uppercase">{{ label }}</div>
+        <div class="h3 fw-bold mb-0">{{ value }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+      <h4 class="fw-bold mb-0">All Users</h4>
+      <form class="d-flex gap-2" method="get">
+        <input class="form-control" name="q" value="{{ q }}" placeholder="Search by account #, name or email">
+        <button class="btn btn-dark">Search</button>
+      </form>
+    </div>
+    <div class="table-responsive">
+      <table class="table align-middle table-hover">
+        <thead class="text-muted small text-uppercase">
+          <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Account</th><th>Type</th><th class="text-end">Balance</th><th></th></tr>
+        </thead>
+        <tbody>
+        {% for u in users %}
+          <tr>
+            <td class="text-muted">{{ u.id }}</td>
+            <td class="fw-semibold">{{ u.full_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone }}</td>
+            <td><code>{{ u.account.account_number if u.account else '—' }}</code></td>
+            <td>{{ u.account.account_type if u.account else '—' }}</td>
+            <td class="text-end">₹{{ '%.2f'|format(u.account.balance) if u.account else '0.00' }}</td>
+            <td class="text-end">
+              <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}"
+                    onsubmit="return confirm('Delete {{ u.email }}?');">
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="8" class="text-muted text-center">No users found.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card balance-card text-white border-0 shadow">
+      <div class="card-body p-4">
+        <p class="text-uppercase small opacity-75 mb-2">Current Balance</p>
+        <h1 class="display-5 fw-bold mb-3">₹{{ '%.2f'|format(account.balance) }}</h1>
+        <div class="d-flex justify-content-between small opacity-90">
+          <div>
+            <div class="opacity-75">Account Holder</div>
+            <div class="fw-semibold">{{ current_user.full_name }}</div>
+          </div>
+          <div class="text-end">
+            <div class="opacity-75">{{ account.account_type }}</div>
+            <div class="fw-semibold tracking-wide">{{ account.account_number }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mt-1">
+      <div class="col-4"><a href="{{ url_for('banking.deposit') }}" class="quick-action">+ Deposit</a></div>
+      <div class="col-4"><a href="{{ url_for('banking.withdraw') }}" class="quick-action">− Withdraw</a></div>
+      <div class="col-4"><a href="{{ url_for('banking.transfer') }}" class="quick-action">↗ Transfer</a></div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body p-4">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h5 class="fw-bold mb-0">Recent Transactions</h5>
+          <a href="{{ url_for('banking.history') }}" class="small">View all</a>
+        </div>
+        {% if transactions %}
+        <div class="table-responsive">
+          <table class="table align-middle table-hover mb-0">
+            <thead class="text-muted small text-uppercase">
+              <tr><th>Type</th><th>Note</th><th class="text-end">Amount</th><th class="text-end">Date</th></tr>
+            </thead>
+            <tbody>
+            {% for t in transactions %}
+              <tr>
+                <td><span class="badge bg-light text-dark">{{ t.type }}</span></td>
+                <td class="small">{{ t.note or '—' }}</td>
+                <td class="text-end fw-semibold {{ 'text-success' if t.type in ['Deposit','Transfer-In'] else 'text-danger' }}">
+                  {{ '+' if t.type in ['Deposit','Transfer-In'] else '−' }}₹{{ '%.2f'|format(t.amount) }}
+                </td>
+                <td class="text-end small text-muted">{{ t.created_at.strftime('%d %b, %H:%M') }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+          <p class="text-muted mb-0">No transactions yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

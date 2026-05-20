@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_macros.html" import render_field %}
+{% block title %}Deposit{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4 p-md-5">
+        <h3 class="fw-bold">Deposit money</h3>
+        <p class="text-muted">Balance: ₹{{ '%.2f'|format(account.balance) }}</p>
+        <form method="POST" novalidate>
+          {{ form.hidden_tag() }}
+          {{ render_field(form.amount) }}
+          {{ render_field(form.note) }}
+          {{ form.submit(class="btn btn-brand btn-lg w-100", value="Deposit") }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

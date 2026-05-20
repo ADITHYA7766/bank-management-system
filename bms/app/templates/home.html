@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<section class="hero rounded-4 p-5 p-md-5 text-white">
+  <div class="row align-items-center">
+    <div class="col-lg-7">
+      <span class="badge bg-light text-dark mb-3">Modern Banking · Built for You</span>
+      <h1 class="display-4 fw-bold mb-3">Banking that feels effortless.</h1>
+      <p class="lead opacity-75 mb-4">
+        Open an account in minutes, deposit and withdraw instantly,
+        and transfer to anyone with NovaBank.
+      </p>
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg fw-semibold">Open Account</a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg">Login</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="row g-4 mt-2">
+  {% for icon, title, body in [
+    ('💸','Instant Transfers','Move money between NovaBank accounts in real time, atomically and securely.'),
+    ('🔐','Bank-grade Security','Hashed passwords, server-side validation, and protected sessions.'),
+    ('📈','Smart Dashboard','See your balance, transactions, and account details at a glance.')
+  ] %}
+  <div class="col-md-4">
+    <div class="card feature-card h-100 border-0 shadow-sm">
+      <div class="card-body p-4">
+        <div class="feature-icon mb-3">{{ icon }}</div>
+        <h5 class="fw-semibold">{{ title }}</h5>
+        <p class="text-muted mb-0">{{ body }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

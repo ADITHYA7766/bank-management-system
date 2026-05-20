@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Admin · Transactions{% endblock %}
+{% block content %}
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-4">
+    <h4 class="fw-bold mb-3">All Transactions (latest 500)</h4>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="text-muted small text-uppercase">
+          <tr><th>#</th><th>Account</th><th>Type</th><th>Counterparty</th><th class="text-end">Amount</th><th class="text-end">Balance</th><th class="text-end">Date</th></tr>
+        </thead>
+        <tbody>
+        {% for t in transactions %}
+          <tr>
+            <td class="text-muted">{{ t.id }}</td>
+            <td><code>{{ t.account.account_number }}</code></td>
+            <td><span class="badge bg-light text-dark">{{ t.type }}</span></td>
+            <td>{{ t.counterparty or '—' }}</td>
+            <td class="text-end fw-semibold {{ 'text-success' if t.type in ['Deposit','Transfer-In'] else 'text-danger' }}">
+              ₹{{ '%.2f'|format(t.amount) }}
+            </td>
+            <td class="text-end">₹{{ '%.2f'|format(t.balance_after) }}</td>
+            <td class="text-end small text-muted">{{ t.created_at.strftime('%d %b %Y, %H:%M') }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
